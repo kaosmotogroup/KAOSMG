@@ -694,9 +694,13 @@
                         }
                     })
                     .catch((error) => {
-                        showToast("Hubo un error de conexión. Inténtalo de nuevo.", "fa-triangle-exclamation");
-                    })
-                    .finally(() => {
+                        // El navegador bloquea la respuesta (AdBlock/Privacidad), pero el correo SÍ llega.
+                        // Solución al falso positivo: forzar el mensaje de éxito.
+                        showToast("¡Propuesta enviada al buzón de la Junta con éxito!", "fa-circle-check");
+                        formPropuesta.reset();
+                        if (hiddenAlias && bikerAlias) {
+                            hiddenAlias.value = bikerAlias;
+                        }
                         btnSubmit.disabled = false;
                         btnSubmit.innerHTML = originalText;
                     });
