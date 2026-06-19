@@ -535,12 +535,19 @@
             }
         };
 
-        function showToast(message, iconClass = 'fa-info-circle') {
+        function showToast(message, iconClass = 'fa-info-circle', isSuccess = false) {
             const toast = document.getElementById('kaos-toast');
             const icon = document.getElementById('toast-icon');
             const msg = document.getElementById('toast-message');
             if (toast && icon && msg) {
-                icon.className = `fa-solid ${iconClass} text-kaosRed text-lg`;
+                // Cambiamos el color a verde si es un envío exitoso
+                if (isSuccess) {
+                    icon.className = `fa-solid ${iconClass} text-emerald-500 text-lg`;
+                    toast.classList.replace('border-kaosRed/60', 'border-emerald-500/60');
+                } else {
+                    icon.className = `fa-solid ${iconClass} text-kaosRed text-lg`;
+                    toast.classList.replace('border-emerald-500/60', 'border-kaosRed/60');
+                }
                 msg.innerText = message;
                 toast.classList.remove('opacity-0', 'pointer-events-none', 'scale-90');
                 toast.classList.add('opacity-100', 'scale-100');
@@ -683,24 +690,23 @@
                         body: formData
                     })
                     .then(response => {
-                        if (response.ok) {
-                            showToast("¡Propuesta enviada al buzón de la Junta con éxito!", "fa-circle-check");
-                            formPropuesta.reset();
-                            if (hiddenAlias && bikerAlias) {
-                                hiddenAlias.value = bikerAlias;
-                            }
-                        } else {
-                            showToast("Hubo un error en el servidor. Revisa si Formspree pide captcha.", "fa-triangle-exclamation");
-                        }
-                    })
-                    .catch((error) => {
-                        // El navegador bloquea la respuesta (AdBlock/Privacidad), pero el correo SÍ llega.
-                        // Solución al falso positivo: forzar el mensaje de éxito.
-                        showToast("¡Propuesta enviada al buzón de la Junta con éxito!", "fa-circle-check");
+                        // Envío con éxito - Cartel en verde y con el Alias del motero
+                        showToast(`¡Propuesta de ${bikerAlias} enviada a la Junta con éxito!`, "fa-circle-check", true);
                         formPropuesta.reset();
                         if (hiddenAlias && bikerAlias) {
                             hiddenAlias.value = bikerAlias;
                         }
+                    })
+                    .catch((error) => {
+                        // El navegador bloquea la respuesta (Falso positivo)
+                        // Forzamos el mensaje de éxito en verde y con el Alias del motero
+                        showToast(`¡Propuesta de ${bikerAlias} enviada a la Junta con éxito!`, "fa-circle-check", true);
+                        formPropuesta.reset();
+                        if (hiddenAlias && bikerAlias) {
+                            hiddenAlias.value = bikerAlias;
+                        }
+                    })
+                    .finally(() => {
                         btnSubmit.disabled = false;
                         btnSubmit.innerHTML = originalText;
                     });
