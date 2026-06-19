@@ -666,37 +666,45 @@
 
             // LÓGICA DE ENVÍO SILENCIOSO (NETLIFY FORMS)
             const formPropuesta = document.getElementById('form-propuesta');
-            if (formPropuesta) {
-                formPropuesta.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    
-                    const btnSubmit = document.getElementById('btn-submit-proposal');
-                    const originalText = btnSubmit.innerHTML;
-                    btnSubmit.disabled = true;
-                    btnSubmit.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Procesando...`;
+if (formPropuesta) {
+    formPropuesta.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-                    const formData = new FormData(formPropuesta);
+        const btnSubmit = document.getElementById('btn-submit-proposal');
+        const originalText = btnSubmit.innerHTML;
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Procesando...`;
 
-                    fetch("/", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                        body: new URLSearchParams(formData).toString()
-                    })
-                    .then(() => {
-                        showToast("¡Propuesta enviada al buzón de la Junta con éxito!", "fa-circle-check");
-                        formPropuesta.reset();
-                        hiddenAlias.value = bikerAlias;
-                    })
-                    .catch((error) => {
-                        showToast("Hubo un error de conexión. Inténtalo de nuevo.", "fa-triangle-exclamation");
-                    })
-                    .finally(() => {
-                        btnSubmit.disabled = false;
-                        btnSubmit.innerHTML = originalText;
-                    });
-                });
+        const formData = new FormData(formPropuesta);
+
+        // 👇 AQUÍ TIENES QUE PONER TU ENLACE DE FORMSPREE 👇
+        fetch("PEGAR_AQUI_TU_ENLACE_DE_FORMSPREE", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json"
+            },
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                showToast("¡Propuesta enviada al buzón de la Junta con éxito!", "fa-circle-check");
+                formPropuesta.reset();
+                if (typeof hiddenAlias !== 'undefined' && typeof bikerAlias !== 'undefined') {
+                    hiddenAlias.value = bikerAlias;
+                }
+            } else {
+                showToast("Hubo un error en el servidor. Inténtalo de nuevo.", "fa-triangle-exclamation");
             }
-
+        })
+        .catch((error) => {
+            showToast("Hubo un error de conexión. Inténtalo de nuevo.", "fa-triangle-exclamation");
+        })
+        .finally(() => {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = originalText;
+        });
+    });
+}
             // LÓGICA DEL CONTADOR AISLADA
             function actualizarContador() {
                 const ahora = new Date();
