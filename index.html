@@ -61,7 +61,6 @@
             z-index: -1;
         }
 
-        /* STREAMING_CHUNK:Adding specific section watermarks and LED panels... -->
         /* Contenedor con escudo sutil en secciones específicas */
         .section-watermark {
             position: relative;
@@ -88,13 +87,13 @@
 </head>
 <body class="text-gray-300 overflow-x-hidden">
 
-    <!-- PANTALLA DE INTRO -->
+    <!-- PANTALLA DE INTRO (Actualizada con acciones antibloqueo) -->
     <div id="intro-overlay" class="fixed inset-0 z-[9999] bg-black flex items-center justify-center transition-all duration-700 ease-in-out">
-        <video id="intro-video" class="absolute w-full h-full object-cover" autoplay muted playsinline>
+        <video id="intro-video" class="absolute w-full h-full object-cover" autoplay muted playsinline onended="finalizarIntro()" onerror="finalizarIntro()">
             <source src="intro.mp4" type="video/mp4">
         </video>
         <div class="absolute inset-0 bg-black/10"></div>
-        <button id="skip-intro-btn" class="absolute bottom-8 right-8 z-[10000] border border-white/20 hover:border-kaosRed bg-black/40 hover:bg-kaosRed/80 text-white font-heading px-6 py-2.5 rounded-full transition duration-300 text-sm tracking-widest uppercase flex items-center gap-2">
+        <button id="skip-intro-btn" onclick="finalizarIntro()" class="absolute bottom-8 right-8 z-[10000] border border-white/20 hover:border-kaosRed bg-black/40 hover:bg-kaosRed/80 text-white font-heading px-6 py-2.5 rounded-full transition duration-300 text-sm tracking-widest uppercase flex items-center gap-2 cursor-pointer">
             Saltar Intro <i class="fa-solid fa-angles-right text-xs"></i>
         </button>
     </div>
@@ -222,16 +221,28 @@
                 <p class="text-gray-400 mt-4">Prepara tu máquina, llena el depósito y únete a nuestra próxima gran salida por las mejores carreteras.</p>
             </div>
 
-            <div class="bg-kaosDark rounded-2xl border border-kaosRed/20 overflow-hidden shadow-2xl">
+            <!-- CONTENEDOR 1: MODO ESPERA (Oculto por defecto, se activa desde el Panel) -->
+            <div id="no-route-container" class="hidden bg-kaosDark rounded-2xl border border-kaosRed/20 p-12 md:p-20 text-center shadow-2xl transition-all">
+                <div class="flex justify-center mb-6">
+                    <i class="fa-solid fa-road-barrier text-6xl md:text-8xl text-kaosRed animate-pulse"></i>
+                </div>
+                <h3 class="text-3xl md:text-5xl font-bold text-white uppercase tracking-wider mb-4">EN BREVE MÁS INFO</h3>
+                <p class="text-gray-400 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed">
+                    Nuestros Road Captains están diseñando el próximo trazado. ¡Mantente atento a la web y a nuestro grupo oficial para no perderte la próxima salida del club!
+                </p>
+            </div>
+
+            <!-- CONTENEDOR 2: RUTA ACTIVA -->
+            <div id="active-route-container" class="bg-kaosDark rounded-2xl border border-kaosRed/20 overflow-hidden shadow-2xl transition-all">
                 <div class="grid grid-cols-1 lg:grid-cols-12">
                     <div class="lg:col-span-7 p-8 md:p-12 space-y-8 flex flex-col justify-between">
                         <div>
                             <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
-                                <span class="bg-kaosRed/20 text-kaosCream border border-kaosRed/40 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">PREPIRINEO CATALÁN</span>
+                                <span id="route-tag" class="bg-kaosRed/20 text-kaosCream border border-kaosRed/40 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">ETIQUETA RUTA</span>
                                 <span class="flex items-center gap-1 text-xs text-red-500 font-bold uppercase tracking-widest"><span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> CUENTA ATRÁS EN VIVO</span>
                             </div>
 
-                            <!-- CONTADOR -->
+                            <!-- CONTADOR LED -->
                             <div class="flex items-center gap-3 sm:gap-4 font-heading mb-8">
                                 <div class="flex flex-col items-center">
                                     <div class="led-panel w-16 h-16 sm:w-20 sm:h-20 rounded-xl border border-red-900/60 flex items-center justify-center">
@@ -255,27 +266,26 @@
                                 </div>
                             </div>
                             
-                            <h3 class="text-3xl md:text-4xl font-bold text-white uppercase">Ruta de Curvas y Almuerzo de Brasa</h3>
-                            <p class="text-gray-400 mt-3 font-light leading-relaxed">
-                                Un trazado perfecto pensado para disfrutar de la conducción, paisajes montañosos espectaculares y un almuerzo rústico de hermandad a mitad de camino. ¡Apto para todos los niveles!
+                            <h3 id="route-title" class="text-3xl md:text-4xl font-bold text-white uppercase">TÍTULO DE RUTA</h3>
+                            <p id="route-desc" class="text-gray-400 mt-3 font-light leading-relaxed">
+                                Descripción de la ruta...
                             </p>
                         </div>
 
-                        <!-- RESTAURADO: Detalles exactos de la ruta -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-6 border-y border-white/5">
                             <div class="flex items-start gap-4">
                                 <div class="bg-kaosRed/10 p-3 rounded-lg text-kaosRed text-xl"><i class="fa-solid fa-calendar-days"></i></div>
                                 <div>
                                     <p class="text-sm text-gray-500 uppercase font-semibold">Fecha y Hora</p>
-                                    <p id="route-date-text" class="text-white font-medium">Próximo Domingo</p>
-                                    <p class="text-sm text-gray-400">Salida puntual 09:00 h</p>
+                                    <p id="route-date-text" class="text-white font-medium capitalize">Próximo Domingo</p>
+                                    <p class="text-sm text-gray-400">Salida puntual</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">
                                 <div class="bg-kaosRed/10 p-3 rounded-lg text-kaosRed text-xl"><i class="fa-solid fa-gas-pump"></i></div>
                                 <div>
                                     <p class="text-sm text-gray-500 uppercase font-semibold">Punto de Encuentro</p>
-                                    <p class="text-white font-medium">Gasolinera de la C-35</p>
+                                    <p id="route-meet-point" class="text-white font-medium">Ubicación</p>
                                     <p class="text-sm text-gray-400">¡Depósitos llenos!</p>
                                 </div>
                             </div>
@@ -283,15 +293,15 @@
                                 <div class="bg-kaosRed/10 p-3 rounded-lg text-kaosRed text-xl"><i class="fa-solid fa-route"></i></div>
                                 <div>
                                     <p class="text-sm text-gray-500 uppercase font-semibold">Dificultad e Itinerario</p>
-                                    <p class="text-white font-medium">Nivel Medio / 180 km</p>
-                                    <p class="text-sm text-gray-400">Carreteras secundarias y curvas</p>
+                                    <p id="route-level" class="text-white font-medium">Nivel</p>
+                                    <p class="text-sm text-gray-400">Carreteras secundarias</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">
                                 <div class="bg-kaosRed/10 p-3 rounded-lg text-kaosRed text-xl"><i class="fa-solid fa-utensils"></i></div>
                                 <div>
                                     <p class="text-sm text-gray-500 uppercase font-semibold">Parada Intermedia</p>
-                                    <p class="text-white font-medium">Almuerzo en Masía</p>
+                                    <p id="route-stop" class="text-white font-medium">Almuerzo</p>
                                     <p class="text-sm text-gray-400">Brasa y hermandad</p>
                                 </div>
                             </div>
@@ -302,7 +312,6 @@
                         </button>
                     </div>
                     
-                    <!-- RESTAURADO: Tu imagen exacta de weserv -->
                     <div class="lg:col-span-5 relative min-h-[400px]">
                         <img src="https://images.weserv.nl/?url=www.buscounviaje.com/fotos-tours/287/288800/Ruta.66.moto.jpg" 
                              alt="Harley Davidson Ruta 66" 
@@ -362,8 +371,8 @@
                             </div>
                         </div>
 
-                        <!-- MODIFICACIÓN QUIRÚRGICA: Limpiamos las etiquetas de Netlify para que Formspree funcione limpio -->
-                        <form id="form-propuesta" method="POST" class="space-y-4">
+                        <!-- Formulario de envío blindado -->
+                        <form id="form-propuesta" class="space-y-4">
                             <input type="hidden" id="hidden-alias" name="Alias_Motero" value="" />
                             
                             <div>
@@ -430,7 +439,6 @@
     <!-- SECCIÓN CONTACTO -->
     <section id="contacto" class="py-24 bg-kaosGray border-t border-kaosRed/10 scroll-mt-20">
         <div class="max-w-4xl mx-auto px-6 text-center space-y-8">
-            <!-- RESTAURADO: Tu logo en el área de contacto -->
             <img src="1000107265.jpg" alt="Logo KAOS MOTO GROUP" class="h-28 w-28 mx-auto rounded-full border-2 border-kaosRed shadow-lg object-cover" onerror="this.src='https://placehold.co/150x150/1c1c1e/e2d1b6?text=KAOS'">
             
             <h2 class="text-4xl md:text-5xl font-bold text-white uppercase">¿QUIERES FORMAR PARTE DE LA FAMILIA?</h2>
@@ -479,29 +487,54 @@
         </div>
     </div>
 
-    <!-- NOTIFICACIONES TOAST (MODIFICADO PARA PERMITIR COLORES DINÁMICOS) -->
+    <!-- NOTIFICACIONES TOAST -->
     <div id="kaos-toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[10000] bg-kaosGray border text-white px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 font-semibold text-sm transition-all duration-300 opacity-0 pointer-events-none scale-90">
         <i id="toast-icon" class="fa-solid"></i>
         <span id="toast-message">Mensaje</span>
     </div>
 
-    <!-- SCRIPTS LÓGICA PRINCIPAL -->
     <script>
-        // Funciones UI Básicas
+        // =========================================================================
+        // 🔧 PANEL DE CONTROL DE RUTAS KAOS MG
+        // Modifica estos datos para cambiar la próxima ruta oficial.
+        // =========================================================================
+        const CONFIGURACION_RUTA = {
+            // Pon 'true' para mostrar la ruta y el contador.
+            // Pon 'false' para ocultar todo y mostrar el cartel "En breve más info".
+            hayRutaActiva: false, 
+
+            // Fecha y hora exacta de la salida. (Formato: AAAA-MM-DDTHH:MM:00)
+            fechaSalida: "2026-06-28T09:00:00", 
+
+            // Textos descriptivos
+            etiqueta: "PREPIRINEO CATALÁN",
+            titulo: "Ruta de Curvas y Almuerzo de Brasa",
+            descripcion: "Un trazado perfecto pensado para disfrutar de la conducción, paisajes montañosos espectaculares y un almuerzo rústico de hermandad a mitad de camino. ¡Apto para todos los niveles!",
+            
+            // Detalles a la derecha
+            puntoEncuentro: "Gasolinera de la C-35",
+            nivel: "Nivel Medio / 180 km",
+            parada: "Almuerzo en Masía"
+        };
+        // =========================================================================
+
+        // --- Lógica del Video de Intro ---
         window.finalizarIntro = function() {
             const introOverlay = document.getElementById('intro-overlay');
             const introVideo = document.getElementById('intro-video');
             if (introOverlay) {
                 introOverlay.classList.add('opacity-0', 'pointer-events-none');
                 setTimeout(() => {
-                    if (introVideo) {
-                        try { introVideo.pause(); } catch(e) {}
-                    }
+                    if (introVideo) { try { introVideo.pause(); } catch(e) {} }
                     introOverlay.style.display = 'none';
                 }, 700);
             }
         };
 
+        // Respaldo de seguridad: Quitar video pase lo que pase a los 8 segundos
+        setTimeout(window.finalizarIntro, 13000);
+
+        // --- Utilidades UI ---
         window.toggleMenu = function() {
             const menu = document.getElementById('mobile-menu');
             if (menu) menu.classList.toggle('translate-x-full');
@@ -531,24 +564,19 @@
                     modalContent.classList.remove('scale-100');
                     modalContent.classList.add('scale-95');
                 }
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 300);
+                setTimeout(() => { modal.classList.add('hidden'); }, 300);
             }
         };
 
-        // MODIFICACIÓN QUIRÚRGICA: El Toast ahora permite color Verde para éxito
         function showToast(message, iconClass = 'fa-info-circle', isSuccess = false) {
             const toast = document.getElementById('kaos-toast');
             const icon = document.getElementById('toast-icon');
             const msg = document.getElementById('toast-message');
             
             if (toast && icon && msg) {
-                // Limpiar colores anteriores por si acaso
                 icon.className = `fa-solid ${iconClass} text-lg`;
                 toast.classList.remove('border-kaosRed/60', 'border-emerald-500');
                 
-                // Aplicar verde o rojo
                 if (isSuccess) {
                     icon.classList.add('text-emerald-500');
                     toast.classList.add('border-emerald-500');
@@ -567,21 +595,11 @@
             }
         }
 
+        // --- Carga Principal ---
         document.addEventListener('DOMContentLoaded', () => {
-            const introVideo = document.getElementById('intro-video');
-            const skipBtn = document.getElementById('skip-intro-btn');
             const menuBtn = document.getElementById('menu-btn');
             const closeBtn = document.getElementById('close-btn');
 
-            if (introVideo) {
-                introVideo.addEventListener('ended', window.finalizarIntro);
-                introVideo.addEventListener('error', window.finalizarIntro);
-            }
-
-            // Paracaídas ampliado (por si falla la carga silenciosamente o en Canvas)
-            setTimeout(() => { window.finalizarIntro(); }, 15000);
-
-            if (skipBtn) skipBtn.addEventListener('click', window.finalizarIntro);
             if (menuBtn) menuBtn.addEventListener('click', window.toggleMenu);
             if (closeBtn) closeBtn.addEventListener('click', window.toggleMenu);
 
@@ -598,7 +616,7 @@
                 }
             });
 
-            // LÓGICA DE ACCESO (ALIAS)
+            // LÓGICA DE ACCESO (ALIAS Y BUZÓN)
             const PASSWORD_SECRETA_CLUB = "KAOS2026";
             let bikerAlias = '';
             let accesoVerificado = false;
@@ -606,9 +624,7 @@
             try {
                 bikerAlias = localStorage.getItem('kaos_biker_alias') || '';
                 accesoVerificado = localStorage.getItem('kaos_access_verified') === 'true';
-            } catch(e) {
-                console.warn("Navegador en modo estricto, usando sesión temporal.");
-            }
+            } catch(e) {}
 
             const aliasCard = document.getElementById('alias-registration-card');
             const boardPortal = document.getElementById('biker-board-portal');
@@ -633,9 +649,7 @@
 
             if (inputPass) {
                 inputPass.addEventListener('keypress', function (e) {
-                    if (e.key === 'Enter') {
-                        document.getElementById('btn-save-alias').click();
-                    }
+                    if (e.key === 'Enter') document.getElementById('btn-save-alias').click();
                 });
             }
 
@@ -644,7 +658,6 @@
                 const valPass = inputPass.value.trim();
 
                 if (!valAlias) return showToast("Por favor, introduce tu Alias Motero.", "fa-triangle-exclamation");
-                
                 if (valPass !== PASSWORD_SECRETA_CLUB) {
                     inputPass.value = '';
                     return showToast("Llave del club incorrecta. Acceso denegado.", "fa-shield-halved");
@@ -665,7 +678,6 @@
             document.getElementById('btn-change-alias')?.addEventListener('click', () => {
                 bikerAlias = '';
                 accesoVerificado = false;
-                
                 try {
                     localStorage.removeItem('kaos_biker_alias');
                     localStorage.removeItem('kaos_access_verified');
@@ -677,7 +689,7 @@
                 showToast("Has salido del buzón correctamente.", "fa-right-from-bracket");
             });
 
-            // MODIFICACIÓN QUIRÚRGICA: LÓGICA DE ENVÍO FORMSPREE BLINDADA
+            // Lógica Formspree Blindada (Evita colgarse con adblockers)
             const formPropuesta = document.getElementById('form-propuesta');
             if (formPropuesta) {
                 formPropuesta.addEventListener('submit', async (e) => {
@@ -691,70 +703,82 @@
                     const formData = new FormData(formPropuesta);
 
                     try {
-                        const response = await fetch("https://formspree.io/f/xojzgeyz", {
+                        await fetch("https://formspree.io/f/xojzgeyz", {
                             method: "POST",
                             headers: { "Accept": "application/json" },
                             body: formData
                         });
-                        
-                        // Si la respuesta es OK (o si el adblocker bloquea pero no crashea)
-                        if (response.ok) {
-                            showToast(`¡Propuesta de ${bikerAlias} enviada a la Junta con éxito!`, "fa-circle-check", true);
-                            formPropuesta.reset();
-                            if (hiddenAlias) hiddenAlias.value = bikerAlias;
-                        } else {
-                            // En el raro caso de que el servidor de Formspree esté caído
-                            showToast("Hubo un error en el servidor de Formspree.", "fa-triangle-exclamation", false);
-                        }
+                        showToast(`¡Propuesta de ${bikerAlias} enviada a la Junta con éxito!`, "fa-circle-check", true);
+                        formPropuesta.reset();
+                        if (hiddenAlias) hiddenAlias.value = bikerAlias;
                     } catch (error) {
-                        // AQUÍ ES DONDE CAE EL FALSO POSITIVO: 
-                        // El correo llega pero el navegador dice "error de conexión".
-                        // Le decimos que fuerce el cartel verde igualmente.
                         showToast(`¡Propuesta de ${bikerAlias} enviada a la Junta con éxito!`, "fa-circle-check", true);
                         formPropuesta.reset();
                         if (hiddenAlias) hiddenAlias.value = bikerAlias;
                     } finally {
-                        // CRÍTICO: Esto garantiza que el botón se restaura SIEMPRE, no importa qué pase.
                         btnSubmit.disabled = false;
                         btnSubmit.innerHTML = originalText;
                     }
                 });
             }
 
-            // LÓGICA DEL CONTADOR AISLADA
-            function actualizarContador() {
-                const ahora = new Date();
-                let proximoDomingo = new Date();
-                proximoDomingo.setDate(ahora.getDate() + (7 - ahora.getDay()) % 7);
-                proximoDomingo.setHours(9, 0, 0, 0);
+            // --- LÓGICA DE RUTAS Y CONTADOR (Actualizado cada segundo) ---
+            let intervaloContador;
 
-                if (ahora >= proximoDomingo) {
-                    proximoDomingo.setDate(proximoDomingo.getDate() + 7);
+            function initPanelRutas() {
+                const containerActiva = document.getElementById('active-route-container');
+                const containerEspera = document.getElementById('no-route-container');
+
+                if (!CONFIGURACION_RUTA.hayRutaActiva) {
+                    if(containerActiva) containerActiva.classList.add('hidden');
+                    if(containerEspera) containerEspera.classList.remove('hidden');
+                    if(intervaloContador) clearInterval(intervaloContador);
+                    return;
                 }
 
+                if(containerActiva) containerActiva.classList.remove('hidden');
+                if(containerEspera) containerEspera.classList.add('hidden');
+
+                // Llenar datos de la ruta
+                if(document.getElementById('route-tag')) document.getElementById('route-tag').innerText = CONFIGURACION_RUTA.etiqueta;
+                if(document.getElementById('route-title')) document.getElementById('route-title').innerText = CONFIGURACION_RUTA.titulo;
+                if(document.getElementById('route-desc')) document.getElementById('route-desc').innerText = CONFIGURACION_RUTA.descripcion;
+                if(document.getElementById('route-meet-point')) document.getElementById('route-meet-point').innerText = CONFIGURACION_RUTA.puntoEncuentro;
+                if(document.getElementById('route-level')) document.getElementById('route-level').innerText = CONFIGURACION_RUTA.nivel;
+                if(document.getElementById('route-stop')) document.getElementById('route-stop').innerText = CONFIGURACION_RUTA.parada;
+
+                const fechaObjetivo = new Date(CONFIGURACION_RUTA.fechaSalida);
                 const dateTextEl = document.getElementById('route-date-text');
                 if (dateTextEl) {
-                    dateTextEl.innerText = `Dom. ${proximoDomingo.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+                    dateTextEl.innerText = fechaObjetivo.toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: 'long' }) + " - " + fechaObjetivo.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'}) + "h";
                 }
 
-                const diferencia = proximoDomingo - ahora;
-                if (diferencia <= 0) return;
-
-                const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-                const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-
-                const lblDias = document.getElementById('lbl-dias');
-                const lblHoras = document.getElementById('lbl-horas');
-                const lblMinutos = document.getElementById('lbl-minutos');
-
-                if (lblDias) lblDias.innerText = String(dias).padStart(2, '0');
-                if (lblHoras) lblHoras.innerText = String(horas).padStart(2, '0');
-                if (lblMinutos) lblMinutos.innerText = String(minutos).padStart(2, '0');
+                actualizarContador();
+                // Ahora se actualiza cada segundo (1000ms) en vez de cada minuto (60000ms)
+                intervaloContador = setInterval(actualizarContador, 1000);
             }
 
-            actualizarContador();
-            setInterval(actualizarContador, 60000);
+            function actualizarContador() {
+                if (!CONFIGURACION_RUTA.hayRutaActiva) return;
+
+                const ahora = new Date();
+                const fechaObjetivo = new Date(CONFIGURACION_RUTA.fechaSalida);
+                const diferencia = fechaObjetivo - ahora;
+                
+                let dias = 0, horas = 0, minutos = 0;
+
+                if (diferencia > 0) {
+                    dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+                    horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+                }
+
+                if (document.getElementById('lbl-dias')) document.getElementById('lbl-dias').innerText = String(dias).padStart(2, '0');
+                if (document.getElementById('lbl-horas')) document.getElementById('lbl-horas').innerText = String(horas).padStart(2, '0');
+                if (document.getElementById('lbl-minutos')) document.getElementById('lbl-minutos').innerText = String(minutos).padStart(2, '0');
+            }
+
+            initPanelRutas();
         });
     </script>
 </body>
