@@ -359,13 +359,13 @@
                     </div>
                 </div>
 
-                <div id="biker-board-portal" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div id="biker-board-portal" class="hidden space-y-12">
                     
-                    <div class="space-y-6">
-                        <div class="flex items-center justify-between border-b border-white/5 pb-4">
-                            <p class="text-sm text-gray-500 font-semibold uppercase tracking-wider">Redactar Propuesta</p>
-                            <div class="flex items-center gap-2 text-xs text-kaosCream bg-kaosRed/10 border border-kaosRed/20 px-2.5 py-1 rounded-full">
-                                <i class="fa-solid fa-user text-[10px]"></i>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                        <div class="space-y-6">
+                            <div class="flex items-center justify-between border-b border-white/5 pb-4">
+                                <p class="text-sm text-gray-500 font-semibold uppercase tracking-wider">Redactar Propuesta</p>
+                                <div class="flex items-center gap-2 text-xs text-kaosCream bg-kaosRed/10 border border-kaosRed/20 px-2.5 py-1 rounded-full">
                                 <span id="current-biker-badge" class="font-bold">Motero</span>
                                 <button id="btn-change-alias" class="text-red-500 hover:text-red-400 font-bold ml-1.5 underline" title="Cambiar Alias">Salir</button>
                             </div>
@@ -379,27 +379,39 @@
                                 <label class="block text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Tema / Título Principal</label>
                                 <input type="text" name="Titulo_Propuesta" id="proposal-title" required placeholder="Ej. Ruta nocturna este verano" class="w-full bg-kaosGray border border-white/10 focus:border-kaosRed rounded-lg px-4 py-3 text-white focus:outline-none transition">
                             </div>
+
                             <div>
-                                <label class="block text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Explicación detallada</label>
-                                <textarea name="Detalles_Explicacion" id="proposal-desc" required rows="4" placeholder="Explica tu idea para llevarla a la próxima reunión..." class="w-full bg-kaosGray border border-white/10 focus:border-kaosRed rounded-lg px-4 py-3 text-white focus:outline-none transition resize-none"></textarea>
+                                <label class="block text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Explicación Detallada</label>
+                                <textarea name="Mensaje_Propuesta" id="proposal-msg" required rows="4" placeholder="Explica tu idea para llevarla a la próxima reunión..." class="w-full bg-kaosGray border border-white/10 focus:border-kaosRed rounded-lg px-4 py-3 text-white focus:outline-none transition resize-none"></textarea>
                             </div>
-                            
-                            <button type="submit" id="btn-submit-proposal" class="w-full bg-kaosRed hover:bg-red-800 text-white font-heading text-lg py-3.5 rounded-lg transition duration-300 tracking-wider uppercase flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-envelope"></i> Enviar a la Junta
+
+                            <button type="submit" id="btn-submit-proposal" class="w-full bg-kaosRed hover:bg-red-800 text-white font-heading text-lg py-3.5 rounded-lg tracking-widest transition duration-300 uppercase shadow-lg shadow-kaosRed/20 flex items-center justify-center gap-2 mt-4">
+                                <i class="fa-solid fa-paper-plane"></i> Enviar a la Junta
                             </button>
                         </form>
+
+                        <div class="mt-8">
+                            <div class="h-12 w-12 bg-kaosRed/10 text-kaosRed rounded-full flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-gavel"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white uppercase tracking-wide">¿Cómo funciona este buzón?</h3>
+                            <ul class="space-y-4 text-gray-400 font-light text-sm mt-4">
+                                <li class="flex gap-3"><i class="fa-solid fa-check text-kaosRed mt-1"></i> <span>Toda propuesta enviada por aquí es <strong>completamente privada</strong>. Solo la directiva/secretaría del club tiene acceso a leerlas.</span></li>
+                                <li class="flex gap-3"><i class="fa-solid fa-check text-kaosRed mt-1"></i> <span>El sistema compilará las ideas en un documento Excel (CSV) oficial que se imprimirá para la próxima reunión presencial.</span></li>
+                                <li class="flex gap-3"><i class="fa-solid fa-check text-kaosRed mt-1"></i> <span>En la junta, se leerán por orden de llegada y se someterán a debate y votación a mano alzada entre los miembros. ¡Tu voz cuenta!</span></li>
+                            </ul>
+                        </div>
                     </div>
 
-                    <div class="bg-kaosGray/40 border border-white/5 p-8 rounded-xl space-y-6">
-                        <div class="h-12 w-12 bg-kaosRed/10 text-kaosRed rounded-full flex items-center justify-center text-xl mb-4">
-                            <i class="fa-solid fa-gavel"></i>
+                    <!-- CALENDARIO PRIVADO (Solo visible al loguearse) -->
+                    <div class="border-t border-white/10 pt-10 mt-10">
+                        <div class="flex items-center justify-between mb-8">
+                            <h3 class="text-2xl font-bold text-white uppercase tracking-wide"><i class="fa-solid fa-calendar-days text-kaosRed mr-3"></i>Calendario Privado</h3>
+                            <span class="text-xs text-gray-500 font-bold uppercase tracking-widest bg-black/30 px-3 py-1 rounded-full border border-white/5 shadow-inner">Eventos Oficiales</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-white uppercase tracking-wide">¿Cómo funciona este buzón?</h3>
-                        <ul class="space-y-4 text-gray-400 font-light text-sm">
-                            <li class="flex gap-3"><i class="fa-solid fa-check text-kaosRed mt-1"></i> <span>Toda propuesta enviada por aquí es <strong>completamente privada</strong>. Solo la directiva/secretaría del club tiene acceso a leerlas.</span></li>
-                            <li class="flex gap-3"><i class="fa-solid fa-check text-kaosRed mt-1"></i> <span>El sistema compilará las ideas en un documento Excel (CSV) oficial que se imprimirá para la próxima reunión presencial.</span></li>
-                            <li class="flex gap-3"><i class="fa-solid fa-check text-kaosRed mt-1"></i> <span>En la junta, se leerán por orden de llegada y se someterán a debate y votación a mano alzada entre los miembros. ¡Tu voz cuenta!</span></li>
-                        </ul>
+                        <div id="private-calendar-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            <!-- Los eventos se cargan aquí desde JavaScript -->
+                        </div>
                     </div>
 
                 </div>
@@ -495,27 +507,15 @@
 
     <script>
         // =========================================================================
-        // 🔧 PANEL DE CONTROL DE RUTAS KAOS MG
-        // Modifica estos datos para cambiar la próxima ruta oficial.
+        // 🔧 CONEXIÓN CON GOOGLE SHEETS (PANEL DE ADMINISTRADOR)
+        // Pega aquí los enlaces TSV que has sacado de tu Google Sheets.
         // =========================================================================
-        const CONFIGURACION_RUTA = {
-            // Pon 'true' para mostrar la ruta y el contador.
-            // Pon 'false' para ocultar todo y mostrar el cartel "En breve más info".
-            hayRutaActiva: false, 
-
-            // Fecha y hora exacta de la salida. (Formato: AAAA-MM-DDTHH:MM:00)
-            fechaSalida: "2026-07-19T08:00:00", 
-
-            // Textos descriptivos
-            etiqueta: "Ruta costera",
-            titulo: "Ruta de de curvas y mariscada",
-            descripcion: "Un trazado perfecto pensado para disfrutar de la conducción, paisajes montañosos espectaculares y un almuerzo rústico de hermandad a mitad de camino. ¡Apto para todos los niveles!",
-            
-            // Detalles a la derecha
-            puntoEncuentro: "Club House KAOS",
-            nivel: "Apto para todos / 200 km",
-            parada: "Almuerzo en cal miguelon / comida en les fonts"
-        };
+        const ENLACE_EXCEL_RUTA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcNfrMGmjp3AOj3M-KRbeIgFNFLcIyGmFaR5MARMUrVDjtW5PSqvi7vTLMj7WoQFmjovufSUxw06vx/pub?gid=0&single=true&output=tsv"; 
+        const ENLACE_EXCEL_CALENDARIO = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcNfrMGmjp3AOj3M-KRbeIgFNFLcIyGmFaR5MARMUrVDjtW5PSqvi7vTLMj7WoQFmjovufSUxw06vx/pub?gid=1501175955&single=true&output=tsv";
+        
+        // Variables vacías que la web rellenará sola al leer el Excel
+        let CONFIGURACION_RUTA = { hayRutaActiva: false };
+        let EVENTOS_PRIVADOS = [];
         // =========================================================================
 
         // --- Lógica del Video de Intro ---
@@ -618,6 +618,21 @@
 
             // LÓGICA DE ACCESO (ALIAS Y BUZÓN)
             const PASSWORD_SECRETA_CLUB = "KAOS2026";
+            
+            // 📋 LISTA BLANCA DE MIEMBROS AUTORIZADOS
+            // Añade aquí los alias exactos de los miembros que tienen permiso.
+            // Ponlos siempre en minúsculas para evitar problemas si alguien escribe con mayúsculas.
+            const MIEMBROS_AUTORIZADOS = [
+                "ghost",
+                "flash",
+                "pz",
+                "perico",
+                "tano",
+                "yoli",
+                "drack",
+                "blackh",
+            ];
+
             let bikerAlias = '';
             let accesoVerificado = false;
             
@@ -633,12 +648,49 @@
             const badgeAlias = document.getElementById('current-biker-badge');
             const hiddenAlias = document.getElementById('hidden-alias');
 
+            function renderizarCalendario() {
+                const grid = document.getElementById('private-calendar-grid');
+                if (!grid) return;
+                
+                grid.innerHTML = ''; // Limpiar el contenedor
+                
+                EVENTOS_PRIVADOS.forEach(evento => {
+                    const fechaObj = new Date(evento.fecha);
+                    const dia = String(fechaObj.getDate()).padStart(2, '0');
+                    const mes = fechaObj.toLocaleString('es-ES', { month: 'short' }).toUpperCase();
+                    
+                    // Elegir icono según el tipo de evento
+                    let icono = "fa-calendar";
+                    if(evento.tipo === "Ruta") icono = "fa-motorcycle";
+                    if(evento.tipo === "Reunión") icono = "fa-users";
+                    if(evento.tipo === "Fiesta") icono = "fa-beer-mug-empty";
+
+                    grid.innerHTML += `
+                        <div class="bg-black/40 border border-white/5 hover:border-kaosRed/40 transition duration-300 rounded-xl p-5 flex gap-5 items-start">
+                            <div class="bg-kaosGray border border-white/10 rounded-lg min-w-[70px] text-center flex flex-col overflow-hidden shadow-lg">
+                                <div class="bg-kaosRed text-white text-[10px] font-bold uppercase tracking-widest py-1">${mes}</div>
+                                <div class="text-2xl font-heading font-bold text-white py-2">${dia}</div>
+                            </div>
+                            <div class="space-y-1.5 flex-1">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid ${icono} text-kaosRed text-xs"></i>
+                                    <span class="text-xs font-bold text-kaosCream uppercase tracking-wider">${evento.tipo}</span>
+                                </div>
+                                <h4 class="text-white font-bold text-lg leading-tight">${evento.titulo}</h4>
+                                <p class="text-gray-400 text-xs font-light leading-relaxed">${evento.desc}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
             function actualizarPantallaPortal() {
                 if (bikerAlias && accesoVerificado) {
                     if (aliasCard) aliasCard.classList.add('hidden');
                     if (boardPortal) boardPortal.classList.remove('hidden');
                     if (badgeAlias) badgeAlias.innerText = bikerAlias;
                     if (hiddenAlias) hiddenAlias.value = bikerAlias; 
+                    renderizarCalendario(); // Cargamos el calendario al entrar
                 } else {
                     if (boardPortal) boardPortal.classList.add('hidden');
                     if (aliasCard) aliasCard.classList.remove('hidden');
@@ -654,16 +706,24 @@
             }
 
             document.getElementById('btn-save-alias')?.addEventListener('click', () => {
-                const valAlias = inputAlias.value.trim();
+                const valAliasOriginal = inputAlias.value.trim();
+                const valAlias = valAliasOriginal.toLowerCase(); // Convertimos a minúsculas para comparar
                 const valPass = inputPass.value.trim();
 
-                if (!valAlias) return showToast("Por favor, introduce tu Alias Motero.", "fa-triangle-exclamation");
+                if (!valAliasOriginal) return showToast("Por favor, introduce tu Alias Motero.", "fa-triangle-exclamation");
+                
+                // 1. Comprobar Contraseña
                 if (valPass !== PASSWORD_SECRETA_CLUB) {
                     inputPass.value = '';
                     return showToast("Llave del club incorrecta. Acceso denegado.", "fa-shield-halved");
                 }
 
-                bikerAlias = valAlias;
+                // 2. Comprobar si el usuario está en la Lista Blanca
+                if (!MIEMBROS_AUTORIZADOS.includes(valAlias)) {
+                    return showToast("Alias no registrado en la Junta. Acceso denegado.", "fa-user-lock");
+                }
+
+                bikerAlias = valAliasOriginal;
                 accesoVerificado = true;
                 
                 try {
@@ -703,18 +763,21 @@
                     const formData = new FormData(formPropuesta);
 
                     try {
-                        await fetch("https://formspree.io/f/xojzgeyz", {
+                        const response = await fetch("https://formspree.io/f/xojzgeyz", {
                             method: "POST",
                             headers: { "Accept": "application/json" },
                             body: formData
                         });
-                        showToast(`¡Propuesta de ${bikerAlias} enviada a la Junta con éxito!`, "fa-circle-check", true);
-                        formPropuesta.reset();
-                        if (hiddenAlias) hiddenAlias.value = bikerAlias;
+                        
+                        if (response.ok) {
+                            showToast(`¡Propuesta de ${bikerAlias} enviada a la Junta con éxito!`, "fa-circle-check", true);
+                            formPropuesta.reset();
+                            if (hiddenAlias) hiddenAlias.value = bikerAlias;
+                        } else {
+                            showToast("Hubo un problema al enviar la propuesta. Inténtalo de nuevo.", "fa-triangle-exclamation");
+                        }
                     } catch (error) {
-                        showToast(`¡Propuesta de ${bikerAlias} enviada a la Junta con éxito!`, "fa-circle-check", true);
-                        formPropuesta.reset();
-                        if (hiddenAlias) hiddenAlias.value = bikerAlias;
+                        showToast("Error de conexión. Revisa tu internet o el bloqueador de anuncios.", "fa-triangle-exclamation");
                     } finally {
                         btnSubmit.disabled = false;
                         btnSubmit.innerHTML = originalText;
@@ -722,13 +785,63 @@
                 });
             }
 
-            // --- LÓGICA DE RUTAS Y CONTADOR (Actualizado cada segundo) ---
+            // --- LÓGICA CONECTADA A GOOGLE SHEETS ---
             let intervaloContador;
+
+            async function cargarDatosDesdeExcel() {
+                try {
+                    // 1. CARGAR DATOS DE LA RUTA
+                    if (ENLACE_EXCEL_RUTA.includes("http")) {
+                        const resRuta = await fetch(ENLACE_EXCEL_RUTA);
+                        const textoRuta = await resRuta.text();
+                        const filasRuta = textoRuta.split('\n');
+                        if (filasRuta.length > 1) {
+                            const columnas = filasRuta[1].split('\t');
+                            CONFIGURACION_RUTA = {
+                                hayRutaActiva: columnas[0].trim().toUpperCase() === 'TRUE' || columnas[0].trim().toUpperCase() === 'SI',
+                                fechaSalida: columnas[1] ? columnas[1].trim() : "",
+                                etiqueta: columnas[2] ? columnas[2].trim() : "",
+                                titulo: columnas[3] ? columnas[3].trim() : "",
+                                descripcion: columnas[4] ? columnas[4].trim() : "",
+                                puntoEncuentro: columnas[5] ? columnas[5].trim() : "",
+                                nivel: columnas[6] ? columnas[6].trim() : "",
+                                parada: columnas[7] ? columnas[7].trim() : ""
+                            };
+                        }
+                    }
+
+                    // 2. CARGAR DATOS DEL CALENDARIO PRIVADO
+                    if (ENLACE_EXCEL_CALENDARIO.includes("http")) {
+                        const resCal = await fetch(ENLACE_EXCEL_CALENDARIO);
+                        const textoCal = await resCal.text();
+                        const filasCal = textoCal.split('\n');
+                        for (let i = 1; i < filasCal.length; i++) {
+                            if (filasCal[i].trim() === "") continue;
+                            const columnas = filasCal[i].split('\t');
+                            if (columnas.length >= 4) {
+                                EVENTOS_PRIVADOS.push({
+                                    fecha: columnas[0].trim(),
+                                    titulo: columnas[1].trim(),
+                                    tipo: columnas[2].trim(),
+                                    desc: columnas[3].trim()
+                                });
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error("Fallo al conectar con Google Sheets:", error);
+                }
+
+                // Una vez descargado todo, encendemos la web
+                initPanelRutas();
+                if (accesoVerificado) renderizarCalendario();
+            }
 
             function initPanelRutas() {
                 const containerActiva = document.getElementById('active-route-container');
                 const containerEspera = document.getElementById('no-route-container');
 
+                // Mostrar la ruta o el modo espera
                 if (!CONFIGURACION_RUTA.hayRutaActiva) {
                     if(containerActiva) containerActiva.classList.add('hidden');
                     if(containerEspera) containerEspera.classList.remove('hidden');
@@ -749,12 +862,11 @@
 
                 const fechaObjetivo = new Date(CONFIGURACION_RUTA.fechaSalida);
                 const dateTextEl = document.getElementById('route-date-text');
-                if (dateTextEl) {
+                if (dateTextEl && !isNaN(fechaObjetivo)) {
                     dateTextEl.innerText = fechaObjetivo.toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: 'long' }) + " - " + fechaObjetivo.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'}) + "h";
                 }
 
                 actualizarContador();
-                // Ahora se actualiza cada segundo (1000ms) en vez de cada minuto (60000ms)
                 intervaloContador = setInterval(actualizarContador, 1000);
             }
 
@@ -778,7 +890,8 @@
                 if (document.getElementById('lbl-minutos')) document.getElementById('lbl-minutos').innerText = String(minutos).padStart(2, '0');
             }
 
-            initPanelRutas();
+            // Arrancar el motor de descargas al cargar la web
+            cargarDatosDesdeExcel();
         });
     </script>
 </body>
