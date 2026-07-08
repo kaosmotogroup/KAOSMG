@@ -221,7 +221,7 @@
                 <p class="text-gray-400 mt-4">Prepara tu máquina, llena el depósito y únete a nuestra próxima gran salida por las mejores carreteras.</p>
             </div>
 
-            <!-- CONTENEDOR 1: MODO ESPERA (Oculto por defecto, se activa desde el Panel) -->
+            <!-- CONTENEDOR 1: MODO ESPERA -->
             <div id="no-route-container" class="hidden bg-kaosDark rounded-2xl border border-kaosRed/20 p-12 md:p-20 text-center shadow-2xl transition-all">
                 <div class="flex justify-center mb-6">
                     <i class="fa-solid fa-road-barrier text-6xl md:text-8xl text-kaosRed animate-pulse"></i>
@@ -507,16 +507,20 @@
 
     <script>
         // =========================================================================
-        // 🔧 CONEXIÓN CON GOOGLE SHEETS (PANEL DE ADMINISTRADOR)
-        // Pega aquí los enlaces TSV que has sacado de tu Google Sheets.
+        // 🔧 CONEXIÓN CON GOOGLE SHEETS
+        // PEGA AQUÍ TUS DOS ENLACES (.tsv) ENTRE LAS COMILLAS
         // =========================================================================
-        const ENLACE_EXCEL_RUTA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcNfrMGmjp3AOj3M-KRbeIgFNFLcIyGmFaR5MARMUrVDjtW5PSqvi7vTLMj7WoQFmjovufSUxw06vx/pub?gid=0&single=true&output=tsv"; 
-        const ENLACE_EXCEL_CALENDARIO = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcNfrMGmjp3AOj3M-KRbeIgFNFLcIyGmFaR5MARMUrVDjtW5PSqvi7vTLMj7WoQFmjovufSUxw06vx/pub?gid=1501175955&single=true&output=tsv";
         
-        // Variables vacías que la web rellenará sola al leer el Excel
-        let CONFIGURACION_RUTA = { hayRutaActiva: false };
-        let EVENTOS_PRIVADOS = [];
+        // 1. Enlace de la pestaña "Ruta":
+        const ENLACE_EXCEL_RUTA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcNfrMGmjp3AOj3M-KRbeIgFNFLcIyGmFaR5MARMUrVDjtW5PSqvi7vTLMj7WoQFmjovufSUxw06vx/pub?gid=0&single=true&output=tsv"; 
+        
+        // 2. Enlace de la pestaña "Calendario":
+        const ENLACE_EXCEL_CALENDARIO = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcNfrMGmjp3AOj3M-KRbeIgFNFLcIyGmFaR5MARMUrVDjtW5PSqvi7vTLMj7WoQFmjovufSUxw06vx/pub?gid=1501175955&single=true&output=tsv";
+
         // =========================================================================
+
+        let CONFIGURACION_RUTA = { hayRutaActiva: false, fechaSalida: "", etiqueta: "", titulo: "", descripcion: "", puntoEncuentro: "", nivel: "", parada: "" };
+        let EVENTOS_PRIVADOS = [];
 
         // --- Lógica del Video de Intro ---
         window.finalizarIntro = function() {
@@ -619,18 +623,8 @@
             // LÓGICA DE ACCESO (ALIAS Y BUZÓN)
             const PASSWORD_SECRETA_CLUB = "KAOS2026";
             
-            // 📋 LISTA BLANCA DE MIEMBROS AUTORIZADOS
-            // Añade aquí los alias exactos de los miembros que tienen permiso.
-            // Ponlos siempre en minúsculas para evitar problemas si alguien escribe con mayúsculas.
             const MIEMBROS_AUTORIZADOS = [
-                "ghost",
-                "flash",
-                "pz",
-                "perico",
-                "tano",
-                "yoli",
-                "drack",
-                "blackh",
+                "ghost", "flash", "pz", "perico", "tano", "yoli", "drack", "blackh", ""
             ];
 
             let bikerAlias = '';
@@ -659,11 +653,22 @@
                     const dia = String(fechaObj.getDate()).padStart(2, '0');
                     const mes = fechaObj.toLocaleString('es-ES', { month: 'short' }).toUpperCase();
                     
-                    // Elegir icono según el tipo de evento
                     let icono = "fa-calendar";
-                    if(evento.tipo === "Ruta") icono = "fa-motorcycle";
-                    if(evento.tipo === "Reunión") icono = "fa-users";
-                    if(evento.tipo === "Fiesta") icono = "fa-beer-mug-empty";
+                    if(evento.tipo === "Ruta" || evento.tipo === "RUTA") icono = "fa-motorcycle";
+                    if(evento.tipo === "Reunión" || evento.tipo === "REUNIÓN" || evento.tipo === "REUNION") icono = "fa-users";
+                    if(evento.tipo === "Fiesta" || evento.tipo === "FIESTA") icono = "fa-beer-mug-empty";
+
+                    // Bloque de Ubicación con Enlace a Google Maps
+                    let htmlUbicacion = "";
+                    if (evento.ubicacion && evento.ubicacion.trim() !== "") {
+                        const enlaceMaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(evento.ubicacion)}`;
+                        htmlUbicacion = `
+                            <a href="${enlaceMaps}" target="_blank" rel="noopener noreferrer" class="mt-3 pt-2.5 border-t border-white/5 flex items-start gap-2 text-xs text-gray-400 font-medium hover:text-kaosCream transition-colors group cursor-pointer block w-full">
+                                <i class="fa-solid fa-location-dot text-kaosRed mt-0.5 group-hover:scale-125 transition-transform duration-300"></i>
+                                <span class="underline decoration-white/20 underline-offset-2 group-hover:decoration-kaosCream/50">${evento.ubicacion}</span>
+                            </a>
+                        `;
+                    }
 
                     grid.innerHTML += `
                         <div class="bg-black/40 border border-white/5 hover:border-kaosRed/40 transition duration-300 rounded-xl p-5 flex gap-5 items-start">
@@ -671,13 +676,18 @@
                                 <div class="bg-kaosRed text-white text-[10px] font-bold uppercase tracking-widest py-1">${mes}</div>
                                 <div class="text-2xl font-heading font-bold text-white py-2">${dia}</div>
                             </div>
-                            <div class="space-y-1.5 flex-1">
-                                <div class="flex items-center gap-2">
-                                    <i class="fa-solid ${icono} text-kaosRed text-xs"></i>
-                                    <span class="text-xs font-bold text-kaosCream uppercase tracking-wider">${evento.tipo}</span>
+                            <div class="space-y-1.5 flex-1 flex flex-col h-full">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <i class="fa-solid ${icono} text-kaosRed text-xs"></i>
+                                        <span class="text-xs font-bold text-kaosCream uppercase tracking-wider">${evento.tipo}</span>
+                                    </div>
+                                    <h4 class="text-white font-bold text-lg leading-tight">${evento.titulo}</h4>
+                                    <p class="text-gray-400 text-xs font-light leading-relaxed mt-1">${evento.desc}</p>
                                 </div>
-                                <h4 class="text-white font-bold text-lg leading-tight">${evento.titulo}</h4>
-                                <p class="text-gray-400 text-xs font-light leading-relaxed">${evento.desc}</p>
+                                <div class="mt-auto">
+                                    ${htmlUbicacion}
+                                </div>
                             </div>
                         </div>
                     `;
@@ -707,18 +717,16 @@
 
             document.getElementById('btn-save-alias')?.addEventListener('click', () => {
                 const valAliasOriginal = inputAlias.value.trim();
-                const valAlias = valAliasOriginal.toLowerCase(); // Convertimos a minúsculas para comparar
+                const valAlias = valAliasOriginal.toLowerCase();
                 const valPass = inputPass.value.trim();
 
                 if (!valAliasOriginal) return showToast("Por favor, introduce tu Alias Motero.", "fa-triangle-exclamation");
                 
-                // 1. Comprobar Contraseña
                 if (valPass !== PASSWORD_SECRETA_CLUB) {
                     inputPass.value = '';
                     return showToast("Llave del club incorrecta. Acceso denegado.", "fa-shield-halved");
                 }
 
-                // 2. Comprobar si el usuario está en la Lista Blanca
                 if (!MIEMBROS_AUTORIZADOS.includes(valAlias)) {
                     return showToast("Alias no registrado en la Junta. Acceso denegado.", "fa-user-lock");
                 }
@@ -749,7 +757,7 @@
                 showToast("Has salido del buzón correctamente.", "fa-right-from-bracket");
             });
 
-            // Lógica Formspree Blindada (Evita colgarse con adblockers)
+            // Lógica Formspree
             const formPropuesta = document.getElementById('form-propuesta');
             if (formPropuesta) {
                 formPropuesta.addEventListener('submit', async (e) => {
@@ -785,7 +793,7 @@
                 });
             }
 
-            // --- LÓGICA CONECTADA A GOOGLE SHEETS ---
+            // --- LÓGICA GOOGLE SHEETS Y RUTAS ---
             let intervaloContador;
 
             async function cargarDatosDesdeExcel() {
@@ -793,28 +801,34 @@
                     // 1. CARGAR DATOS DE LA RUTA
                     if (ENLACE_EXCEL_RUTA.includes("http")) {
                         const resRuta = await fetch(ENLACE_EXCEL_RUTA);
+                        if (!resRuta.ok) throw new Error("Error leyendo el TSV de Ruta");
+                        
                         const textoRuta = await resRuta.text();
                         const filasRuta = textoRuta.split('\n');
+                        
                         if (filasRuta.length > 1) {
-                            const columnas = filasRuta[1].split('\t');
-                            CONFIGURACION_RUTA = {
-                                hayRutaActiva: columnas[0].trim().toUpperCase() === 'TRUE' || columnas[0].trim().toUpperCase() === 'SI',
-                                fechaSalida: columnas[1] ? columnas[1].trim() : "",
-                                etiqueta: columnas[2] ? columnas[2].trim() : "",
-                                titulo: columnas[3] ? columnas[3].trim() : "",
-                                descripcion: columnas[4] ? columnas[4].trim() : "",
-                                puntoEncuentro: columnas[5] ? columnas[5].trim() : "",
-                                nivel: columnas[6] ? columnas[6].trim() : "",
-                                parada: columnas[7] ? columnas[7].trim() : ""
-                            };
+                            const valores = filasRuta[1].split('\t');
+                            CONFIGURACION_RUTA.hayRutaActiva = valores[0].trim().toUpperCase() === 'TRUE' || valores[0].trim().toUpperCase() === 'SI';
+                            CONFIGURACION_RUTA.fechaSalida = valores[1] ? valores[1].trim() : "";
+                            CONFIGURACION_RUTA.etiqueta = valores[2] ? valores[2].trim() : "";
+                            CONFIGURACION_RUTA.titulo = valores[3] ? valores[3].trim() : "";
+                            CONFIGURACION_RUTA.descripcion = valores[4] ? valores[4].trim() : "";
+                            CONFIGURACION_RUTA.puntoEncuentro = valores[5] ? valores[5].trim() : "";
+                            CONFIGURACION_RUTA.nivel = valores[6] ? valores[6].trim() : "";
+                            CONFIGURACION_RUTA.parada = valores[7] ? valores[7].trim() : "";
                         }
                     }
 
-                    // 2. CARGAR DATOS DEL CALENDARIO PRIVADO
+                    // 2. CARGAR DATOS DEL CALENDARIO PRIVADO (Ahora lee la 5ª columna de Ubicación)
                     if (ENLACE_EXCEL_CALENDARIO.includes("http")) {
                         const resCal = await fetch(ENLACE_EXCEL_CALENDARIO);
+                        if (!resCal.ok) throw new Error("Error leyendo el TSV del Calendario");
+                        
                         const textoCal = await resCal.text();
                         const filasCal = textoCal.split('\n');
+                        
+                        EVENTOS_PRIVADOS = []; 
+                        
                         for (let i = 1; i < filasCal.length; i++) {
                             if (filasCal[i].trim() === "") continue;
                             const columnas = filasCal[i].split('\t');
@@ -823,25 +837,29 @@
                                     fecha: columnas[0].trim(),
                                     titulo: columnas[1].trim(),
                                     tipo: columnas[2].trim(),
-                                    desc: columnas[3].trim()
+                                    desc: columnas[3].trim(),
+                                    // Índice 4 es la columna E (Ubicación)
+                                    ubicacion: columnas[4] ? columnas[4].trim() : ""
                                 });
                             }
                         }
+                        
+                        if (accesoVerificado) renderizarCalendario();
                     }
+                    
                 } catch (error) {
                     console.error("Fallo al conectar con Google Sheets:", error);
+                    showToast("No se pudo conectar con los datos del excel. Mostrando datos por defecto.", "fa-triangle-exclamation");
                 }
 
-                // Una vez descargado todo, encendemos la web
+                // 3. ACTUALIZAR INTERFAZ DE RUTAS
                 initPanelRutas();
-                if (accesoVerificado) renderizarCalendario();
             }
 
             function initPanelRutas() {
                 const containerActiva = document.getElementById('active-route-container');
                 const containerEspera = document.getElementById('no-route-container');
 
-                // Mostrar la ruta o el modo espera
                 if (!CONFIGURACION_RUTA.hayRutaActiva) {
                     if(containerActiva) containerActiva.classList.add('hidden');
                     if(containerEspera) containerEspera.classList.remove('hidden');
@@ -852,7 +870,6 @@
                 if(containerActiva) containerActiva.classList.remove('hidden');
                 if(containerEspera) containerEspera.classList.add('hidden');
 
-                // Llenar datos de la ruta
                 if(document.getElementById('route-tag')) document.getElementById('route-tag').innerText = CONFIGURACION_RUTA.etiqueta;
                 if(document.getElementById('route-title')) document.getElementById('route-title').innerText = CONFIGURACION_RUTA.titulo;
                 if(document.getElementById('route-desc')) document.getElementById('route-desc').innerText = CONFIGURACION_RUTA.descripcion;
@@ -890,7 +907,7 @@
                 if (document.getElementById('lbl-minutos')) document.getElementById('lbl-minutos').innerText = String(minutos).padStart(2, '0');
             }
 
-            // Arrancar el motor de descargas al cargar la web
+            // Arrancar lectura de Excel al cargar la página
             cargarDatosDesdeExcel();
         });
     </script>
