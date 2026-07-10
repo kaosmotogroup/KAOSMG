@@ -35,6 +35,7 @@
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: #0c0c0e;
+            overflow-x: hidden;
         }
         h1, h2, h3, .font-heading {
             font-family: 'Oswald', sans-serif;
@@ -85,9 +86,9 @@
         }
     </style>
 </head>
-<body class="text-gray-300 overflow-x-hidden">
+<body class="text-gray-300">
 
-    <!-- PANTALLA DE INTRO (Actualizada con acciones antibloqueo) -->
+    <!-- PANTALLA DE INTRO -->
     <div id="intro-overlay" class="fixed inset-0 z-[9999] bg-black flex items-center justify-center transition-all duration-700 ease-in-out">
         <video id="intro-video" class="absolute w-full h-full object-cover" autoplay muted playsinline onended="finalizarIntro()" onerror="finalizarIntro()">
             <source src="intro.mp4" type="video/mp4">
@@ -112,7 +113,7 @@
             <a href="#inicio" class="text-gray-300 hover:text-kaosRed transition">INICIO</a>
             <a href="#nosotros" class="text-gray-300 hover:text-kaosRed transition">NOSOTROS</a>
             <a href="#rutas" class="text-gray-300 hover:text-kaosRed transition">PROXIMA SALIDA</a>
-            <a href="#propuestas" class="text-gray-300 hover:text-kaosRed font-semibold transition flex items-center gap-1.5"><i class="fa-solid fa-comments text-kaosRed"></i> REUNIONES</a>
+            <button onclick="openPrivateArea()" class="text-kaosCream hover:text-kaosRed font-semibold transition flex items-center gap-1.5"><i class="fa-solid fa-lock"></i> ÁREA PRIVADA</button>
             <a href="#filosofia" class="text-gray-300 hover:text-kaosRed transition">REGLAS</a>
             <a href="#contacto" class="bg-kaosRed hover:bg-red-800 text-white px-4 py-2 rounded-md transition duration-300 shadow-lg shadow-kaosRed/30">UNIRSE AL CLUB</a>
         </div>
@@ -131,7 +132,7 @@
             <a href="#inicio" class="text-gray-300 hover:text-kaosRed transition" onclick="toggleMenu()">INICIO</a>
             <a href="#nosotros" class="text-gray-300 hover:text-kaosRed transition" onclick="toggleMenu()">NOSOTROS</a>
             <a href="#rutas" class="text-gray-300 hover:text-kaosRed transition" onclick="toggleMenu()">PROXIMA SALIDA</a>
-            <a href="#propuestas" class="text-kaosCream hover:text-kaosRed transition" onclick="toggleMenu()">REUNIONES</a>
+            <button onclick="openPrivateArea(); toggleMenu();" class="text-left text-kaosCream hover:text-kaosRed transition flex items-center gap-2"><i class="fa-solid fa-lock text-sm"></i> ÁREA PRIVADA</button>
             <a href="#filosofia" class="text-gray-300 hover:text-kaosRed transition" onclick="toggleMenu()">REGLAS</a>
             <a href="#contacto" class="bg-kaosRed text-center text-white py-2 rounded-md transition" onclick="toggleMenu()">UNIRSE AL CLUB</a>
         </div>
@@ -323,104 +324,8 @@
         </div>
     </section>
 
-    <!-- SECCIÓN DE PROPUESTAS (BUZÓN) -->
-    <section id="propuestas" class="py-24 bg-gradient-to-b from-kaosDark to-kaosGray border-b border-kaosRed/10 scroll-mt-20">
-        <div class="max-w-7xl mx-auto px-6 md:px-12">
-            
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <div class="inline-block text-kaosRed font-heading text-xl font-bold tracking-widest uppercase mb-3">
-                    <i class="fa-solid fa-envelope-open-text mr-2"></i> ORDEN DEL DÍA
-                </div>
-                <h2 class="text-4xl md:text-5xl font-bold text-white uppercase">BUZÓN DE LA JUNTA</h2>
-                <p class="text-gray-400 mt-4">¿Tienes ideas para el club, nuevas rutas o propuestas de parches? Envía tu propuesta. Se guardará de forma privada y se votará en la próxima reunión presencial.</p>
-            </div>
-
-            <div class="bg-kaosDark border border-kaosRed/20 rounded-2xl p-6 md:p-10 shadow-2xl">
-                
-                <div id="alias-registration-card" class="max-w-md mx-auto text-center space-y-6 py-6">
-                    <div class="h-16 w-16 bg-kaosRed/10 text-kaosRed rounded-full flex items-center justify-center text-3xl mx-auto border border-kaosRed/30">
-                        <i class="fa-solid fa-key"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white uppercase tracking-wider">Acceso Privado</h3>
-                    <p class="text-gray-400 text-sm font-light">Este buzón está restringido solo para miembros oficiales de <strong>KAOS MOTO GROUP</strong>.</p>
-                    
-                    <div class="space-y-3 text-left">
-                        <div>
-                            <label class="block text-xs text-gray-500 font-bold uppercase tracking-widest mb-1.5 ml-1">Alias / Apodo Motero</label>
-                            <input type="text" id="input-biker-alias" placeholder="Ej. Rider_Asfalto" class="w-full bg-kaosGray border border-white/10 focus:border-kaosRed rounded-lg px-4 py-3 text-white focus:outline-none transition font-semibold text-center">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 font-bold uppercase tracking-widest mb-1.5 ml-1">Llave Secreta del Club 🔑</label>
-                            <input type="password" id="input-club-pass" placeholder="••••••••" class="w-full bg-kaosGray border border-white/10 focus:border-kaosRed rounded-lg px-4 py-3 text-white focus:outline-none transition font-semibold text-center tracking-widest">
-                        </div>
-                        <button id="btn-save-alias" class="w-full bg-kaosRed hover:bg-red-800 text-white font-heading text-lg py-3 rounded-lg tracking-wider transition duration-300 uppercase shadow-lg shadow-kaosRed/20 mt-4">
-                            Verificar y Acceder
-                        </button>
-                    </div>
-                </div>
-
-                <div id="biker-board-portal" class="hidden space-y-12">
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-                        <div class="space-y-6">
-                            <div class="flex items-center justify-between border-b border-white/5 pb-4">
-                                <p class="text-sm text-gray-500 font-semibold uppercase tracking-wider">Redactar Propuesta</p>
-                                <div class="flex items-center gap-2 text-xs text-kaosCream bg-kaosRed/10 border border-kaosRed/20 px-2.5 py-1 rounded-full">
-                                <span id="current-biker-badge" class="font-bold">Motero</span>
-                                <button id="btn-change-alias" class="text-red-500 hover:text-red-400 font-bold ml-1.5 underline" title="Cambiar Alias">Salir</button>
-                            </div>
-                        </div>
-
-                        <!-- Formulario de envío blindado -->
-                        <form id="form-propuesta" class="space-y-4">
-                            <input type="hidden" id="hidden-alias" name="Alias_Motero" value="" />
-                            
-                            <div>
-                                <label class="block text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Tema / Título Principal</label>
-                                <input type="text" name="Titulo_Propuesta" id="proposal-title" required placeholder="Ej. Ruta nocturna este verano" class="w-full bg-kaosGray border border-white/10 focus:border-kaosRed rounded-lg px-4 py-3 text-white focus:outline-none transition">
-                            </div>
-
-                            <div>
-                                <label class="block text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Explicación Detallada</label>
-                                <textarea name="Mensaje_Propuesta" id="proposal-msg" required rows="4" placeholder="Explica tu idea para llevarla a la próxima reunión..." class="w-full bg-kaosGray border border-white/10 focus:border-kaosRed rounded-lg px-4 py-3 text-white focus:outline-none transition resize-none"></textarea>
-                            </div>
-
-                            <button type="submit" id="btn-submit-proposal" class="w-full bg-kaosRed hover:bg-red-800 text-white font-heading text-lg py-3.5 rounded-lg tracking-widest transition duration-300 uppercase shadow-lg shadow-kaosRed/20 flex items-center justify-center gap-2 mt-4">
-                                <i class="fa-solid fa-paper-plane"></i> Enviar a la Junta
-                            </button>
-                        </form>
-
-                        <div class="mt-8">
-                            <div class="h-12 w-12 bg-kaosRed/10 text-kaosRed rounded-full flex items-center justify-center text-xl mb-4">
-                                <i class="fa-solid fa-gavel"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-white uppercase tracking-wide">¿Cómo funciona este buzón?</h3>
-                            <ul class="space-y-4 text-gray-400 font-light text-sm mt-4">
-                                <li class="flex gap-3"><i class="fa-solid fa-check text-kaosRed mt-1"></i> <span>Toda propuesta enviada por aquí es <strong>completamente privada</strong>. Solo la directiva/secretaría del club tiene acceso a leerlas.</span></li>
-                                <li class="flex gap-3"><i class="fa-solid fa-check text-kaosRed mt-1"></i> <span>El sistema compilará las ideas en un documento Excel (CSV) oficial que se imprimirá para la próxima reunión presencial.</span></li>
-                                <li class="flex gap-3"><i class="fa-solid fa-check text-kaosRed mt-1"></i> <span>En la junta, se leerán por orden de llegada y se someterán a debate y votación a mano alzada entre los miembros. ¡Tu voz cuenta!</span></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- CALENDARIO PRIVADO (Solo visible al loguearse) -->
-                    <div class="border-t border-white/10 pt-10 mt-10">
-                        <div class="flex items-center justify-between mb-8">
-                            <h3 class="text-2xl font-bold text-white uppercase tracking-wide"><i class="fa-solid fa-calendar-days text-kaosRed mr-3"></i>Calendario Privado</h3>
-                            <span class="text-xs text-gray-500 font-bold uppercase tracking-widest bg-black/30 px-3 py-1 rounded-full border border-white/5 shadow-inner">Eventos Oficiales</span>
-                        </div>
-                        <div id="private-calendar-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                            <!-- Los eventos se cargan aquí desde JavaScript -->
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- SECCIÓN FILOSOFÍA -->
-    <section id="filosofia" class="py-24 max-w-7xl mx-auto px-6 md:px-12 scroll-mt-20 section-watermark">
+    <section id="filosofia" class="py-24 max-w-7xl mx-auto px-6 md:px-12 scroll-mt-20 section-watermark border-t border-kaosRed/10">
         <div class="relative z-10 text-center max-w-3xl mx-auto mb-16">
             <div class="inline-block text-kaosRed font-heading text-xl font-bold tracking-widest uppercase mb-3">
                 <i class="fa-solid fa-shield-halved mr-2"></i> LEYES DE LA CARRETERA
@@ -482,7 +387,7 @@
     </footer>
 
     <!-- MODAL INSCRIPCIÓN -->
-    <div id="rsvp-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+    <div id="rsvp-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
         <div class="bg-kaosDark border border-kaosRed/30 rounded-2xl max-w-md w-full p-8 relative transform scale-95 transition-transform duration-300">
             <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
             <div class="text-center space-y-4">
@@ -499,6 +404,105 @@
         </div>
     </div>
 
+    <!-- ÁREA PRIVADA (MODAL FULLSCREEN VIP) -->
+    <div id="private-area-modal" class="fixed inset-0 z-[999] bg-kaosDark/95 backdrop-blur-xl hidden opacity-0 transition-opacity duration-500 overflow-y-auto">
+        <button onclick="closePrivateArea()" class="fixed top-6 right-6 text-gray-400 hover:text-kaosRed text-4xl z-50 transition duration-300"><i class="fa-solid fa-xmark"></i></button>
+        
+        <div class="max-w-7xl mx-auto px-6 py-20 min-h-screen flex flex-col justify-center">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <div class="inline-block text-kaosRed font-heading text-xl font-bold tracking-widest uppercase mb-3">
+                    <i class="fa-solid fa-lock mr-2"></i> ACCESO RESTRINGIDO
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold text-white uppercase">CLUBHOUSE VIRTUAL</h2>
+                <p class="text-gray-400 mt-4 text-sm md:text-base">Espacio exclusivo para miembros oficiales. Calendario interno y buzón directo a la junta directiva.</p>
+            </div>
+
+            <!-- CONTENEDOR ÁREA PRIVADA -->
+            <div class="bg-black/40 border border-kaosRed/30 rounded-2xl p-6 md:p-12 shadow-2xl relative overflow-hidden">
+                
+                <!-- LOGIN FORM -->
+                <div id="alias-registration-card" class="max-w-md mx-auto text-center space-y-6 py-10">
+                    <div class="h-20 w-20 bg-kaosRed/10 text-kaosRed rounded-full flex items-center justify-center text-4xl mx-auto border border-kaosRed/30 shadow-lg shadow-kaosRed/20">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white uppercase tracking-wider">Identifícate</h3>
+                    <p class="text-gray-400 text-sm font-light">Introduce tu Alias registrado en la Junta y la llave secreta del club para entrar.</p>
+                    
+                    <div class="space-y-4 text-left">
+                        <div>
+                            <label class="block text-xs text-gray-500 font-bold uppercase tracking-widest mb-1.5 ml-1">Alias / Apodo Motero</label>
+                            <input type="text" id="input-biker-alias" placeholder="Ej. Rider_Asfalto" class="w-full bg-kaosGray border border-white/10 focus:border-kaosRed rounded-xl px-4 py-3 text-white focus:outline-none transition font-semibold text-center text-lg shadow-inner">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 font-bold uppercase tracking-widest mb-1.5 ml-1">Llave Secreta 🔑</label>
+                            <input type="password" id="input-club-pass" placeholder="••••••••" class="w-full bg-kaosGray border border-white/10 focus:border-kaosRed rounded-xl px-4 py-3 text-white focus:outline-none transition font-semibold text-center tracking-widest text-lg shadow-inner">
+                        </div>
+                        <button id="btn-save-alias" class="w-full bg-kaosRed hover:bg-red-800 text-white font-heading text-lg py-3.5 rounded-xl tracking-wider transition duration-300 uppercase shadow-lg shadow-kaosRed/30 mt-6 border border-red-500/50">
+                            Desbloquear Puerta
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CONTENIDO VIP (Buzón + Calendario) -->
+                <div id="biker-board-portal" class="hidden space-y-12 animate-[fadeIn_0.5s_ease-out]">
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                        <div class="space-y-6">
+                            <div class="flex items-center justify-between border-b border-white/5 pb-4">
+                                <p class="text-sm text-gray-500 font-semibold uppercase tracking-wider">Redactar Propuesta</p>
+                                <div class="flex items-center gap-2 text-xs text-kaosCream bg-kaosRed/10 border border-kaosRed/20 px-3 py-1.5 rounded-full">
+                                    <span id="current-biker-badge" class="font-bold">Motero</span>
+                                    <button id="btn-change-alias" class="text-red-500 hover:text-red-400 font-bold ml-2 underline" title="Cerrar Sesión"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
+                                </div>
+                            </div>
+
+                            <!-- Formulario de envío blindado -->
+                            <form id="form-propuesta" class="space-y-4">
+                                <input type="hidden" id="hidden-alias" name="Alias_Motero" value="" />
+                                
+                                <div>
+                                    <label class="block text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Tema / Título Principal</label>
+                                    <input type="text" name="Titulo_Propuesta" id="proposal-title" required placeholder="Ej. Ruta nocturna este verano" class="w-full bg-kaosGray border border-white/10 focus:border-kaosRed rounded-lg px-4 py-3 text-white focus:outline-none transition">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Explicación Detallada</label>
+                                    <textarea name="Mensaje_Propuesta" id="proposal-msg" required rows="4" placeholder="Explica tu idea para llevarla a la próxima reunión..." class="w-full bg-kaosGray border border-white/10 focus:border-kaosRed rounded-lg px-4 py-3 text-white focus:outline-none transition resize-none"></textarea>
+                                </div>
+
+                                <button type="submit" id="btn-submit-proposal" class="w-full bg-kaosRed hover:bg-red-800 text-white font-heading text-lg py-3.5 rounded-lg tracking-widest transition duration-300 uppercase shadow-lg shadow-kaosRed/20 flex items-center justify-center gap-2 mt-4">
+                                    <i class="fa-solid fa-paper-plane"></i> Enviar a la Junta
+                                </button>
+                            </form>
+
+                            <div class="mt-8">
+                                <div class="h-12 w-12 bg-kaosRed/10 text-kaosRed rounded-full flex items-center justify-center text-xl mb-4">
+                                    <i class="fa-solid fa-gavel"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-white uppercase tracking-wide">¿Cómo funciona el buzón?</h3>
+                                <ul class="space-y-3 text-gray-400 font-light text-xs mt-3">
+                                    <li class="flex gap-3"><i class="fa-solid fa-check text-kaosRed mt-1"></i> <span>Toda propuesta es <strong>100% privada</strong>. Solo la directiva tiene acceso a leerlas.</span></li>
+                                    <li class="flex gap-3"><i class="fa-solid fa-check text-kaosRed mt-1"></i> <span>El sistema compilará las ideas para la próxima reunión presencial.</span></li>
+                                    <li class="flex gap-3"><i class="fa-solid fa-check text-kaosRed mt-1"></i> <span>En la junta, se someterán a debate y votación. ¡Tu voz cuenta!</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- CALENDARIO PRIVADO (Dentro del modal) -->
+                        <div class="lg:border-l lg:border-white/10 lg:pl-12 h-full">
+                            <div class="flex items-center justify-between mb-8">
+                                <h3 class="text-2xl font-bold text-white uppercase tracking-wide"><i class="fa-solid fa-calendar-days text-kaosRed mr-3"></i>Calendario Interno</h3>
+                            </div>
+                            <div id="private-calendar-grid" class="flex flex-col gap-5">
+                                <!-- Los eventos se cargan aquí desde JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- NOTIFICACIONES TOAST -->
     <div id="kaos-toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[10000] bg-kaosGray border text-white px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 font-semibold text-sm transition-all duration-300 opacity-0 pointer-events-none scale-90">
         <i id="toast-icon" class="fa-solid"></i>
@@ -511,10 +515,7 @@
         // PEGA AQUÍ TUS DOS ENLACES (.tsv) ENTRE LAS COMILLAS
         // =========================================================================
         
-        // 1. Enlace de la pestaña "Ruta":
         const ENLACE_EXCEL_RUTA = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcNfrMGmjp3AOj3M-KRbeIgFNFLcIyGmFaR5MARMUrVDjtW5PSqvi7vTLMj7WoQFmjovufSUxw06vx/pub?gid=0&single=true&output=tsv"; 
-        
-        // 2. Enlace de la pestaña "Calendario":
         const ENLACE_EXCEL_CALENDARIO = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQcNfrMGmjp3AOj3M-KRbeIgFNFLcIyGmFaR5MARMUrVDjtW5PSqvi7vTLMj7WoQFmjovufSUxw06vx/pub?gid=1501175955&single=true&output=tsv";
 
         // =========================================================================
@@ -535,13 +536,31 @@
             }
         };
 
-        // Respaldo de seguridad: Quitar video pase lo que pase a los 8 segundos
         setTimeout(window.finalizarIntro, 13000);
 
         // --- Utilidades UI ---
         window.toggleMenu = function() {
             const menu = document.getElementById('mobile-menu');
             if (menu) menu.classList.toggle('translate-x-full');
+        };
+
+        // LÓGICA DE APERTURA ÁREA PRIVADA
+        window.openPrivateArea = function() {
+            const modal = document.getElementById('private-area-modal');
+            document.body.style.overflow = 'hidden'; // Evita que se pueda hacer scroll por detrás
+            if (modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => { modal.classList.remove('opacity-0'); }, 50);
+            }
+        };
+
+        window.closePrivateArea = function() {
+            const modal = document.getElementById('private-area-modal');
+            document.body.style.overflow = 'auto'; // Devuelve el scroll normal
+            if (modal) {
+                modal.classList.add('opacity-0');
+                setTimeout(() => { modal.classList.add('hidden'); }, 500);
+            }
         };
 
         window.openModal = function() {
@@ -620,7 +639,7 @@
                 }
             });
 
-            // LÓGICA DE ACCESO (ALIAS Y BUZÓN)
+            // LÓGICA DE ACCESO (ALIAS Y BUZÓN VIP)
             const PASSWORD_SECRETA_CLUB = "KAOS2026";
             
             const MIEMBROS_AUTORIZADOS = [
@@ -646,7 +665,7 @@
                 const grid = document.getElementById('private-calendar-grid');
                 if (!grid) return;
                 
-                grid.innerHTML = ''; // Limpiar el contenedor
+                grid.innerHTML = ''; 
                 
                 EVENTOS_PRIVADOS.forEach(evento => {
                     const fechaObj = new Date(evento.fecha);
@@ -658,7 +677,6 @@
                     if(evento.tipo === "Reunión" || evento.tipo === "REUNIÓN" || evento.tipo === "REUNION") icono = "fa-users";
                     if(evento.tipo === "Fiesta" || evento.tipo === "FIESTA") icono = "fa-beer-mug-empty";
 
-                    // Bloque de Ubicación con Enlace a Google Maps
                     let htmlUbicacion = "";
                     if (evento.ubicacion && evento.ubicacion.trim() !== "") {
                         const enlaceMaps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(evento.ubicacion)}`;
@@ -671,7 +689,7 @@
                     }
 
                     grid.innerHTML += `
-                        <div class="bg-black/40 border border-white/5 hover:border-kaosRed/40 transition duration-300 rounded-xl p-5 flex gap-5 items-start">
+                        <div class="bg-black/60 border border-white/5 hover:border-kaosRed/40 transition duration-300 rounded-xl p-5 flex gap-5 items-start">
                             <div class="bg-kaosGray border border-white/10 rounded-lg min-w-[70px] text-center flex flex-col overflow-hidden shadow-lg">
                                 <div class="bg-kaosRed text-white text-[10px] font-bold uppercase tracking-widest py-1">${mes}</div>
                                 <div class="text-2xl font-heading font-bold text-white py-2">${dia}</div>
@@ -700,7 +718,7 @@
                     if (boardPortal) boardPortal.classList.remove('hidden');
                     if (badgeAlias) badgeAlias.innerText = bikerAlias;
                     if (hiddenAlias) hiddenAlias.value = bikerAlias; 
-                    renderizarCalendario(); // Cargamos el calendario al entrar
+                    renderizarCalendario(); 
                 } else {
                     if (boardPortal) boardPortal.classList.add('hidden');
                     if (aliasCard) aliasCard.classList.remove('hidden');
@@ -740,7 +758,7 @@
                 } catch(e) {}
                 
                 actualizarPantallaPortal();
-                showToast(`¡Acceso concedido! Bienvenido, ${bikerAlias}`, "fa-circle-check", true);
+                showToast(`¡Acceso concedido! Bienvenido al Área Privada, ${bikerAlias}`, "fa-circle-check", true);
             });
 
             document.getElementById('btn-change-alias')?.addEventListener('click', () => {
@@ -754,7 +772,7 @@
                 if (inputAlias) inputAlias.value = '';
                 if (inputPass) inputPass.value = '';
                 actualizarPantallaPortal();
-                showToast("Has salido del buzón correctamente.", "fa-right-from-bracket");
+                showToast("Sesión cerrada correctamente.", "fa-right-from-bracket");
             });
 
             // Lógica Formspree
@@ -785,7 +803,7 @@
                             showToast("Hubo un problema al enviar la propuesta. Inténtalo de nuevo.", "fa-triangle-exclamation");
                         }
                     } catch (error) {
-                        showToast("Error de conexión. Revisa tu internet o el bloqueador de anuncios.", "fa-triangle-exclamation");
+                        showToast("Error de conexión. Revisa tu internet.", "fa-triangle-exclamation");
                     } finally {
                         btnSubmit.disabled = false;
                         btnSubmit.innerHTML = originalText;
@@ -798,10 +816,9 @@
 
             async function cargarDatosDesdeExcel() {
                 try {
-                    // 1. CARGAR DATOS DE LA RUTA
                     if (ENLACE_EXCEL_RUTA.includes("http")) {
                         const resRuta = await fetch(ENLACE_EXCEL_RUTA);
-                        if (!resRuta.ok) throw new Error("Error leyendo el TSV de Ruta");
+                        if (!resRuta.ok) throw new Error("Error TSV Ruta");
                         
                         const textoRuta = await resRuta.text();
                         const filasRuta = textoRuta.split('\n');
@@ -819,10 +836,9 @@
                         }
                     }
 
-                    // 2. CARGAR DATOS DEL CALENDARIO PRIVADO (Ahora lee la 5ª columna de Ubicación)
                     if (ENLACE_EXCEL_CALENDARIO.includes("http")) {
                         const resCal = await fetch(ENLACE_EXCEL_CALENDARIO);
-                        if (!resCal.ok) throw new Error("Error leyendo el TSV del Calendario");
+                        if (!resCal.ok) throw new Error("Error TSV Calendario");
                         
                         const textoCal = await resCal.text();
                         const filasCal = textoCal.split('\n');
@@ -838,7 +854,6 @@
                                     titulo: columnas[1].trim(),
                                     tipo: columnas[2].trim(),
                                     desc: columnas[3].trim(),
-                                    // Índice 4 es la columna E (Ubicación)
                                     ubicacion: columnas[4] ? columnas[4].trim() : ""
                                 });
                             }
@@ -848,11 +863,9 @@
                     }
                     
                 } catch (error) {
-                    console.error("Fallo al conectar con Google Sheets:", error);
-                    showToast("No se pudo conectar con los datos del excel. Mostrando datos por defecto.", "fa-triangle-exclamation");
+                    console.error("Fallo Google Sheets:", error);
                 }
 
-                // 3. ACTUALIZAR INTERFAZ DE RUTAS
                 initPanelRutas();
             }
 
@@ -907,7 +920,6 @@
                 if (document.getElementById('lbl-minutos')) document.getElementById('lbl-minutos').innerText = String(minutos).padStart(2, '0');
             }
 
-            // Arrancar lectura de Excel al cargar la página
             cargarDatosDesdeExcel();
         });
     </script>
