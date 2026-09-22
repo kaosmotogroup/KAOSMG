@@ -649,7 +649,31 @@
                 }, 4000);
             }
         }
-
+        
+// --- Utilidades de Fecha Segura ---
+    window.parsearFechaSegura = function(fechaStr) {
+        if (!fechaStr) return new Date(""); // Fecha inválida
+        // Si el Excel devuelve formato europeo (DD/MM/YYYY)
+        if (fechaStr.includes('/')) {
+            const partes = fechaStr.split(' '); // Divide fecha de hora
+            const trozosFecha = partes[0].split('/');
+            const d = parseInt(trozosFecha[0], 10);
+            const m = parseInt(trozosFecha[1], 10) - 1; // JS usa meses 0-11
+            const a = parseInt(trozosFecha[2], 10);
+            
+            let h = 0, min = 0, s = 0;
+            if (partes[1]) {
+                const trozosHora = partes[1].split(':');
+                h = parseInt(trozosHora[0] || 0, 10);
+                min = parseInt(trozosHora[1] || 0, 10);
+                s = parseInt(trozosHora[2] || 0, 10);
+            }
+            return new Date(a, m, d, h, min, s);
+        }
+        // Si viene en formato nativo (YYYY-MM-DD)
+        return new Date(fechaStr); 
+    };
+        
         // --- Carga Principal ---
         document.addEventListener('DOMContentLoaded', () => {
             const menuBtn = document.getElementById('menu-btn');
@@ -729,9 +753,16 @@
                 grid.innerHTML = ''; 
                 
                 EVENTOS_PRIVADOS.forEach(evento => {
-                    const fechaObj = new Date(evento.fecha);
-                    const dia = String(fechaObj.getDate()).padStart(2, '0');
-                    const mes = fechaObj.toLocaleString('es-ES', { month: 'short' }).toUpperCase();
+                   // Usamos nuestra nueva función a prueba de fallos
+                    const fechaObj = window.parsearFechaSegura(evento.fecha);
+                    
+                    let dia = "--";
+                    let mes = "N/A";
+                    
+                    if (!isNaN(fechaObj.getTime())) {
+                        dia = String(fechaObj.getDate()).padStart(2, '0');
+                        mes = fechaObj.toLocaleString('es-ES', { month: 'short' }).replace('.', '').toUpperCase();
+                    };
                     
                     let icono = "fa-calendar";
                     if(evento.tipo === "Ruta" || evento.tipo === "RUTA") icono = "fa-motorcycle";
@@ -987,7 +1018,8 @@
                 if(document.getElementById('route-level')) document.getElementById('route-level').innerText = CONFIGURACION_RUTA.nivel;
                 if(document.getElementById('route-stop')) document.getElementById('route-stop').innerText = CONFIGURACION_RUTA.parada;
 
-                const fechaObjetivo = new Date(CONFIGURACION_RUTA.fechaSalida);
+                // Usamos la nueva función segura para la próxima ruta
+                const fechaObjetivo = window.parsearFechaSegura(CONFIGURACION_RUTA.fechaSalida);
                 const dateTextEl = document.getElementById('route-date-text');
                 if (dateTextEl && !isNaN(fechaObjetivo)) {
                     dateTextEl.innerText = fechaObjetivo.toLocaleDateString('es-ES', { weekday: 'long', day: '2-digit', month: 'long' }) + " - " + fechaObjetivo.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'}) + "h";
@@ -1001,7 +1033,8 @@
                 if (!CONFIGURACION_RUTA.hayRutaActiva) return;
 
                 const ahora = new Date();
-                const fechaObjetivo = new Date(CONFIGURACION_RUTA.fechaSalida);
+                // Usamos la nueva función segura para el contador
+                const fechaObjetivo = window.parsearFechaSegura(CONFIGURACION_RUTA.fechaSalida);
                 const diferencia = fechaObjetivo - ahora;
                 
                 let dias = 0, horas = 0, minutos = 0;
